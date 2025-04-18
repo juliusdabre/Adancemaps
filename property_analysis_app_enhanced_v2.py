@@ -139,11 +139,26 @@ st.subheader("Correlation Analysis")
 correlation_cols = ['12M Price Change', 'Median Income', 'Population Density', 'Median Age']
 correlation_matrix = filtered_sa3[correlation_cols].corr()
 
-fig_corr = px.imshow(
-    correlation_matrix,
+# Create correlation heatmap using go.Heatmap for more control
+fig_corr = go.Figure(data=go.Heatmap(
+    z=correlation_matrix,
+    x=correlation_matrix.columns,
+    y=correlation_matrix.columns,
     text=correlation_matrix.round(2),
-    aspect="auto",
-    color_continuous_scale="RdBu"
+    texttemplate='%{text}',
+    textfont={"size": 10},
+    hoverongaps=False,
+    colorscale='RdBu'
+))
+
+# Update layout for better readability
+fig_corr.update_layout(
+    title='Correlation Matrix',
+    width=600,
+    height=500,
+    xaxis_title='',
+    yaxis_title='',
+    xaxis={'side': 'bottom'}
 )
 fig_corr.update_layout(height=400)
 st.plotly_chart(fig_corr, use_container_width=True)
